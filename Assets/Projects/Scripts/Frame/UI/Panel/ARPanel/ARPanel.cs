@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ARPanel : BasePanel
 {
-    Button button_yandi, button_huangdi, button_fuxi;
+    public Button button_yandi, button_huangdi, button_fuxi;
     public override void InitFind()
     {
         base.InitFind();
@@ -19,15 +19,16 @@ public class ARPanel : BasePanel
     {
         base.InitEvent();
         button_yandi.onClick.AddListener(() => {
-            LogMsg.Instance.Log("111");
+            ARState.SwitchPanel(PanelName.YandiPanel);
         });
 
         button_huangdi.onClick.AddListener(() => {
+            Debug.Log("打开黄帝");
             ARState.SwitchPanel(PanelName.HuangdiPanel);
         });
 
         button_fuxi.onClick.AddListener(() => {
-            LogMsg.Instance.Log("333");
+            ARState.SwitchPanel(PanelName.FuxiPanel);
         });
     }
 

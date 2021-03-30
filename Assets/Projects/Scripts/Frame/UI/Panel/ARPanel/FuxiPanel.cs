@@ -4,14 +4,13 @@ using UnityEngine;
 using MTFrame;
 using UnityEngine.UI;
 using RenderHeads.Media.AVProVideo;
-using System;
 
-public class HuangdiPanel : BasePanel
+public class FuxiPanel : BasePanel
 {
     public Button[] buttons;
     public Button BackButton;
     public PopupPanel popupPanel;
-    public CanvasGroup ButtonsCanvasGroup,MediaCanvasGroup;
+    public CanvasGroup ButtonsCanvasGroup, MediaCanvasGroup;
     public MediaPlayer mediaPlayer;
     public string VideoPath;
 
@@ -27,7 +26,7 @@ public class HuangdiPanel : BasePanel
         {
             case MediaPlayerEvent.EventType.FinishedPlaying:
                 MediaCanvasGroup.Hide();
-                ButtonsCanvasGroup.Open(0.5f);            
+                ButtonsCanvasGroup.Open(0.5f);
                 break;
             default:
                 break;
@@ -54,12 +53,11 @@ public class HuangdiPanel : BasePanel
         }
 
         BackButton.onClick.AddListener(() => {
-            Debug.Log("伏羲");
             ARState.SwitchPanel(PanelName.WaitPanel);
         });
     }
 
-    private void InitButton(Button button,int num)
+    private void InitButton(Button button, int num)
     {
         button.onClick.AddListener(() => {
             popupPanel.ShowImage(num);
