@@ -18,6 +18,6 @@ public class ARTask : BaseTask
     public override void Exit()
     {
         base.Exit();
-        
+        UIManager.ChangePanelState<ARPanel>(WindowTypeEnum.Screen, UIPanelStateEnum.Hide);
     }
 }

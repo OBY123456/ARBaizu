@@ -8,7 +8,7 @@ public class ARPanel : BasePanel
 {
     public Button button_yandi, button_huangdi, button_fuxi;
 
-    private float BackTime = 5;
+    private float BackTime = 180;
     private float Back_Time;
     private bool IsBack;
 
@@ -24,15 +24,18 @@ public class ARPanel : BasePanel
     {
         base.InitEvent();
         button_yandi.onClick.AddListener(() => {
-            ARState.SwitchPanel(PanelName.YandiPanel);
+            ARState.SwitchPanel(PanelName.yandiModelPanel);
+            ModelControl.Instance.ShowModel(0, PanelName.YandiPanel);
         });
 
         button_huangdi.onClick.AddListener(() => {
-            ARState.SwitchPanel(PanelName.HuangdiPanel);
+            ARState.SwitchPanel(PanelName.huangdiModelPanel);
+            ModelControl.Instance.ShowModel(1, PanelName.HuangdiPanel);
         });
 
         button_fuxi.onClick.AddListener(() => {
-            ARState.SwitchPanel(PanelName.FuxiPanel);
+            ARState.SwitchPanel(PanelName.FuxiModelPanel);
+            ModelControl.Instance.ShowModel(2, PanelName.FuxiPanel);
         });
     }
 

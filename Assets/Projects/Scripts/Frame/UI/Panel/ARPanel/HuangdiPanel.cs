@@ -3,36 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using MTFrame;
 using UnityEngine.UI;
-using RenderHeads.Media.AVProVideo;
 using System;
+using UnityEngine.Video;
 
 public class HuangdiPanel : BasePanel
 {
     public Button[] buttons;
     public Button BackButton;
     public PopupPanel popupPanel;
-    public CanvasGroup ButtonsCanvasGroup,MediaCanvasGroup;
-    public MediaPlayer mediaPlayer;
-    public string VideoPath;
+    //public CanvasGroup ButtonsCanvasGroup;
+    public VideoPlayer videoPlayer;
 
     protected override void Start()
     {
         base.Start();
-        mediaPlayer.Events.AddListener(OnConplete);
+       
     }
 
-    private void OnConplete(MediaPlayer arg0, MediaPlayerEvent.EventType arg1, ErrorCode arg2)
-    {
-        switch (arg1)
-        {
-            case MediaPlayerEvent.EventType.FinishedPlaying:
-                MediaCanvasGroup.Hide();
-                ButtonsCanvasGroup.Open(0.5f);            
-                break;
-            default:
-                break;
-        }
-    }
+
 
     public override void InitFind()
     {
@@ -40,9 +28,10 @@ public class HuangdiPanel : BasePanel
         buttons = FindTool.FindChildNode(transform, "buttons").GetComponentsInChildren<Button>();
         BackButton = FindTool.FindChildComponent<Button>(transform, "backButton");
         popupPanel = FindTool.FindChildComponent<PopupPanel>(transform, "PopupPanel");
-        ButtonsCanvasGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "buttons");
-        MediaCanvasGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "VideoGroup");
-        mediaPlayer = FindTool.FindChildComponent<MediaPlayer>(transform, "VideoGroup/VideoPlayer");
+        videoPlayer = FindTool.FindChildComponent<VideoPlayer>(transform, "Video/RawImage");
+        //ButtonsCanvasGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "buttons");
+
+
     }
 
     public override void InitEvent()
@@ -54,9 +43,17 @@ public class HuangdiPanel : BasePanel
         }
 
         BackButton.onClick.AddListener(() => {
-            Debug.Log("伏羲");
             ARState.SwitchPanel(PanelName.WaitPanel);
         });
+
+        videoPlayer.loopPointReached += VideoComplete;
+    }
+
+    private void VideoComplete(VideoPlayer source)
+    {
+        Debug.Log("播放完成");
+        videoPlayer.frame = 121;
+        videoPlayer.Play();
     }
 
     private void InitButton(Button button,int num)
@@ -69,19 +66,19 @@ public class HuangdiPanel : BasePanel
     public override void Open()
     {
         base.Open();
-        mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath, true);
-        Reset();
+        videoPlayer.Play();
+        //Reset();
     }
 
     public override void Hide()
     {
         base.Hide();
-        mediaPlayer.Stop();
+        videoPlayer.Stop();
+        videoPlayer.targetTexture.Release();
     }
 
     private void Reset()
     {
-        ButtonsCanvasGroup.Hide();
-        MediaCanvasGroup.Open();
+        //ButtonsCanvasGroup.Hide();
     }
 }

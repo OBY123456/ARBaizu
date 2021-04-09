@@ -14,6 +14,9 @@ namespace MTFrame
         HuangdiPanel,
         YandiPanel,
         FuxiPanel,
+        FuxiModelPanel,
+        huangdiModelPanel,
+        yandiModelPanel,
     }
 
     public enum EventType
@@ -66,6 +69,15 @@ public class ARState : BaseState
                     break;
                 case PanelName.FuxiPanel:
                     CurrentTask.ChangeTask(new FuxiTask(this));
+                    break;
+                case PanelName.FuxiModelPanel:
+                    CurrentTask.ChangeTask(new FuxiModelTask(this));
+                    break;
+                case PanelName.huangdiModelPanel:
+                    CurrentTask.ChangeTask(new huangdiModelTask(this));
+                    break;
+                case PanelName.yandiModelPanel:
+                    CurrentTask.ChangeTask(new yandiModelTask(this));
                     break;
                 default:
                     break;
