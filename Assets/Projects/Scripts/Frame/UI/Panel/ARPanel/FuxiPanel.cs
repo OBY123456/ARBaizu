@@ -11,12 +11,13 @@ public class FuxiPanel : BasePanel
     public Button[] buttons;
     public Button BackButton;
     public PopupPanel popupPanel;
-    //public CanvasGroup ButtonsCanvasGroup;
-    public VideoPlayer videoPlayer;
+    public VideoPlayer videoPlayer,videoPlayer_loop;
+    public CanvasGroup videoCanvas,videoloopCanvas;
 
     protected override void Start()
     {
         base.Start();
+        Reset();
     }
 
     public override void InitFind()
@@ -26,7 +27,9 @@ public class FuxiPanel : BasePanel
         BackButton = FindTool.FindChildComponent<Button>(transform, "backButton");
         popupPanel = FindTool.FindChildComponent<PopupPanel>(transform, "PopupPanel");
         videoPlayer = FindTool.FindChildComponent<VideoPlayer>(transform, "Video/RawImage");
-        //ButtonsCanvasGroup = FindTool.FindChildComponent<CanvasGroup>(transform, "buttons");
+        videoPlayer_loop = FindTool.FindChildComponent<VideoPlayer>(transform, "Video (1)/RawImage");
+        videoCanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Video");
+        videoloopCanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Video (1)");
     }
 
     public override void InitEvent()
@@ -42,13 +45,20 @@ public class FuxiPanel : BasePanel
         });
 
         videoPlayer.loopPointReached += VideoComplete;
+        //videoPlayer_loop.prepareCompleted += VideoPrepare;
     }
+
+    //private void VideoPrepare(VideoPlayer source)
+    //{
+    //    videoPlayer_loop.Pause();
+    //}
 
     private void VideoComplete(VideoPlayer source)
     {
-        Debug.Log("播放完成");
-        videoPlayer.frame = 121;
-        videoPlayer.Play();
+        videoPlayer.targetTexture.Release();
+        videoCanvas.alpha = 0;
+        videoloopCanvas.alpha = 1;
+        videoPlayer_loop.Play();
     }
 
     private void InitButton(Button button, int num)
@@ -61,20 +71,31 @@ public class FuxiPanel : BasePanel
     public override void Open()
     {
         base.Open();
+        videoPlayer.targetTexture.Release();
         videoPlayer.Play();
-        //Reset();
     }
 
     public override void Hide()
     {
         base.Hide();
         videoPlayer.Stop();
-        videoPlayer.targetTexture.Release();
+        videoPlayer_loop.Stop();
+
+        Reset();
     }
 
     private void Reset()
     {
-        //ButtonsCanvasGroup.Hide();
+        VideoRelease();
+
+        videoCanvas.alpha = 1;
+        videoloopCanvas.alpha = 0;
+    }
+
+    private void VideoRelease()
+    {
+        videoPlayer.targetTexture.Release();
+        videoPlayer_loop.targetTexture.Release();
     }
 
 }
