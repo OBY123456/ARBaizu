@@ -13,6 +13,7 @@ public class WaitTask : BaseTask
     {
         base.Enter();
         UIManager.CreatePanel<WaitPanel>(WindowTypeEnum.ForegroundScreen);
+        //UIManager.CreatePanel<ARPanel>(WindowTypeEnum.Screen, UIPanelStateEnum.Hide);
     }
 
     public override void Exit()

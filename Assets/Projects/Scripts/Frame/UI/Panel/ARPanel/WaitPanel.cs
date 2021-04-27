@@ -10,7 +10,11 @@ public class WaitPanel : BasePanel
 {
     public CanvasGroup canvasGroup;
     Button button;
-    string data1 = "2021/5/13 00:00:00";
+    string data1 = "2021/5/14 00:00:00";
+
+    private float BackTime = 180;
+    private float Back_Time;
+    private bool IsBack;
 
     protected override void Awake()
     {
@@ -50,7 +54,8 @@ public class WaitPanel : BasePanel
     public override void Hide()
     {
         base.Hide();
-
+        IsBack = true;
+        Back_Time = BackTime;
     }
 
     public void CompanyDate(string dateStr1, string dateStr2)
@@ -72,6 +77,27 @@ public class WaitPanel : BasePanel
         if (num < 0)
         {
             Debug.Log("t1:(" + dateStr1 + ")小于" + "t2(" + dateStr2 + ")");
+        }
+    }
+
+    private void Update()
+    {
+        if (Back_Time > 0 && IsBack)
+        {
+            Back_Time -= Time.deltaTime;
+            //LogMsg.Instance.Log(Back_Time.ToString());
+            if (Back_Time <= 0)
+            {
+                IsBack = false;
+                ModelControl.Instance.HideModel();
+                ARState.SwitchPanel(PanelName.WaitPanel);
+                CompanyDate(System.DateTime.Now.ToString(), data1);
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                Back_Time = BackTime;
+            }
         }
     }
 

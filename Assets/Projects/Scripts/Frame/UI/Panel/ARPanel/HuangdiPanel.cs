@@ -5,14 +5,18 @@ using MTFrame;
 using UnityEngine.UI;
 using System;
 using UnityEngine.Video;
+using DG.Tweening;
 
 public class HuangdiPanel : BasePanel
 {
     public Button[] buttons;
     public Button BackButton;
     public PopupPanel popupPanel;
-    public VideoPlayer videoPlayer, videoPlayer_loop;
-    public CanvasGroup videoCanvas, videoloopCanvas;
+
+    public VideoPlayer videoPlayerIn, videoPlayerLoop;
+    public CanvasGroup canvasGroupIn, canvasGroupLoop;
+    public Sprite sprite;
+
 
     protected override void Start()
     {
@@ -28,11 +32,13 @@ public class HuangdiPanel : BasePanel
         buttons = FindTool.FindChildNode(transform, "buttons").GetComponentsInChildren<Button>();
         BackButton = FindTool.FindChildComponent<Button>(transform, "backButton");
         popupPanel = FindTool.FindChildComponent<PopupPanel>(transform, "PopupPanel");
-        videoPlayer = FindTool.FindChildComponent<VideoPlayer>(transform, "Video/RawImage");
-        videoPlayer_loop = FindTool.FindChildComponent<VideoPlayer>(transform, "Video (1)/RawImage");
-        videoCanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Video");
-        videoloopCanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Video (1)");
 
+        videoPlayerIn = FindTool.FindChildComponent<VideoPlayer>(transform, "Anima");
+        videoPlayerLoop = FindTool.FindChildComponent<VideoPlayer>(transform, "Anima (1)");
+        canvasGroupIn = FindTool.FindChildComponent<CanvasGroup>(transform, "Anima");
+        canvasGroupLoop = FindTool.FindChildComponent<CanvasGroup>(transform, "Anima (1)");
+
+        sprite = Resources.Load<Sprite>("Sprite/FUXI_1");
 
     }
 
@@ -48,15 +54,14 @@ public class HuangdiPanel : BasePanel
             ARState.SwitchPanel(PanelName.WaitPanel);
         });
 
-        videoPlayer.loopPointReached += VideoComplete;
+        videoPlayerIn.loopPointReached += Complete;
     }
 
-    private void VideoComplete(VideoPlayer source)
+    private void Complete(VideoPlayer source)
     {
-        videoPlayer.targetTexture.Release();
-        videoCanvas.alpha = 0;
-        videoloopCanvas.alpha = 1;
-        videoPlayer_loop.Play();
+        canvasGroupIn.alpha = 0;
+        videoPlayerLoop.Play();
+        canvasGroupLoop.alpha = 1;
     }
 
     private void InitButton(Button button,int num)
@@ -69,30 +74,30 @@ public class HuangdiPanel : BasePanel
     public override void Open()
     {
         base.Open();
-        videoPlayer.targetTexture.Release();
-        videoPlayer.Play();
+        videoPlayerIn.Play();
+        videoPlayerLoop.Play();
+        videoPlayerLoop.Pause();
+        canvasGroupIn.DOFade(1, 0.5f);
     }
 
     public override void Hide()
     {
         base.Hide();
-        videoPlayer.Stop();
-        videoPlayer_loop.Stop();
 
+        
+        videoPlayerIn.Stop();
+        videoPlayerLoop.Stop();
         Reset();
     }
 
     private void Reset()
     {
-        VideoRelease();
+        canvasGroupIn.alpha = 0;
+        canvasGroupLoop.alpha = 0;
 
-        videoCanvas.alpha = 1;
-        videoloopCanvas.alpha = 0;
+
+        Graphics.Blit((Texture2D)sprite.texture, videoPlayerIn.targetTexture);
+        Graphics.Blit((Texture2D)sprite.texture, videoPlayerLoop.targetTexture);
     }
 
-    private void VideoRelease()
-    {
-        videoPlayer.targetTexture.Release();
-        videoPlayer_loop.targetTexture.Release();
-    }
 }
