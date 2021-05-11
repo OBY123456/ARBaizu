@@ -40,7 +40,7 @@ public class FuxiModelPanel : BasePanel
 
     private void Complete(VideoPlayer source)
     {
-        //ARState.SwitchPanel(panel);
+        ARState.SwitchPanel(panel);
     }
 
     //private void Complete(MediaPlayer arg0, MediaPlayerEvent.EventType arg1, ErrorCode arg2)
